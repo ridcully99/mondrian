@@ -81,7 +81,7 @@ public class Segment extends FrameLayout {
      *
      * @return true if back-pressed was handled here, false if you want parent to handle it
      */
-    public boolean onBackPressed() {
+    public boolean handleBackPressed() {
         return false;
     }
 

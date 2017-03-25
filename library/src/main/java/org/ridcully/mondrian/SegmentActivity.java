@@ -48,38 +48,25 @@ public class SegmentActivity extends AppCompatActivity {
     }
 
     /**
-     * Dispatches onBackPressed event to all attached segments. Only if none of the segments
-     * 'consumes' the event, the parent class' onBackPressed() is called.
-     *
-     * You can use {@link #onBackPressedBeforeSegments()} and {@link #onBackPressedAfterSegments()}
-     * to add your own handling of onBackPressed events before or after the segments are called.
+     * This method is final. Override {@link #handleBackPressed()} instead.
      */
     @Override
     final public void onBackPressed() {
-        if (onBackPressedBeforeSegments()) return;
-        if (performSegmentsOnBackPressed()) return;
-        if (onBackPressedAfterSegments()) return;
-        super.onBackPressed();
+        if (!handleBackPressed()) {
+            super.onBackPressed();
+        }
     }
 
     /**
-     * Invoked when back button is pressed, before the event is passed on to direct child segments.
+     * Called upon backPressed event, this method invokes handleBackPressed()
+     * on attached Segments (also Segments attached to Segments etc.), until as a segment
+     * consumes the event. If the event is not consumed by any event, the default implementation
+     * (super.onBackPressed() is called.
      *
-     * @return whether the event has been consumed and should not be passed on any further
+     * @return true if backPressed event was consumed by any Segment, false if not.
      */
-    public boolean onBackPressedBeforeSegments() {
-        return false;
-    }
-
-    /**
-     * Invoked when back button is pressed, after calls to {@link #onBackPressedBeforeSegments()}
-     * and after event has been passed on to direct child segments and if the event has not been
-     * consumed by any of those.
-     *
-     * @return whether the event has been consumed and should not be passed on any further
-     */
-    public boolean onBackPressedAfterSegments() {
-        return false;
+    public boolean handleBackPressed() {
+        return performSegmentsHandleBackPressed();
     }
 
     /**
@@ -126,12 +113,20 @@ public class SegmentActivity extends AppCompatActivity {
     // ---------------------------------------------------------------------------------------------
 
 
-    private boolean performSegmentsOnBackPressed() {
-        boolean handled = false;
-        for (Segment segment : getSegments(false)) {
-            handled = segment.onBackPressed() || handled; // let all segments handle back presses
+    /**
+     * TODO Segmente anders durchgehen/aufrufen -- immer ganz ans Segment-Tree Ende gehen und dort anfangen.
+     * TODO Und während dem Durchgehen handleBackPressed() aufrufen
+     *
+     *
+     *
+     * @return
+     */
+    private boolean performSegmentsHandleBackPressed() {
+        for (Segment segment : getSegments(true)) {
+            boolean handled = segment.handleBackPressed();
+            if (handled) return true;
         }
-        return handled;
+        return false;
     }
 
     private List<Segment> getSegments(boolean collectSubSegments) {

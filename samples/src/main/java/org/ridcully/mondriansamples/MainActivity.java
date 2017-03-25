@@ -28,16 +28,15 @@ public class MainActivity extends SegmentActivity {
         mSegmentContainer.addView(new SampleSegment(this));
     }
 
-
-
     @Override
-    public boolean onBackPressedAfterSegments() {
-        if (getSegment() != null) {
-            mSegmentContainer.removeAllViews();
-            return true;
-        } else {
-            return false;
+    public boolean handleBackPressed() {
+        if (!super.handleBackPressed()) {
+            if (getSegment() != null) {
+                mSegmentContainer.removeAllViews();
+                return true;
+            }
         }
+        return false;
     }
 
     private Segment getSegment() {
