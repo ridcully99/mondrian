@@ -1,11 +1,15 @@
 package org.ridcully.mondriansamples;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.FrameLayout;
 
 import org.ridcully.mondrian.Segment;
 import org.ridcully.mondrian.SegmentActivity;
+import org.ridcully.mondrian.SegmentContainer;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -13,13 +17,24 @@ import butterknife.OnClick;
 
 public class MainActivity extends SegmentActivity {
 
-    @BindView(R.id.segment_container) FrameLayout mSegmentContainer;
+    @BindView(R.id.segment_container) SegmentContainer mSegmentContainer;
+
+    private List<Parcelable> mSegmentTransactions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        if (savedInstanceState != null) {
+            mSegmentContainer.rebuildFromBundle(savedInstanceState, "foo");
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mSegmentContainer.saveToBundle(outState, "foo");
     }
 
     @OnClick(R.id.bt_add)

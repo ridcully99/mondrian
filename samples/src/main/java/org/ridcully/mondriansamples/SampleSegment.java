@@ -1,6 +1,7 @@
 package org.ridcully.mondriansamples;
 
 import android.content.Context;
+import android.os.Parcelable;
 import android.widget.Toast;
 
 import org.ridcully.mondrian.Segment;
@@ -18,6 +19,11 @@ class SampleSegment extends Segment {
     }
 
     @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        super.onRestoreInstanceState(state);
+    }
+
+    @Override
     protected void onCreate() {
         super.onCreate();
         setContentView(R.layout.segment_sample);
@@ -25,10 +31,10 @@ class SampleSegment extends Segment {
     }
 
     @Override
-    public boolean onBackPressed() {
+    public boolean handleBackPressed() {
         Toast.makeText(getContext(),
                 "SampleSegment received onBackPressed but ignores it", Toast.LENGTH_SHORT)
                 .show();
-        return super.onBackPressed();
+        return super.handleBackPressed();
     }
 }

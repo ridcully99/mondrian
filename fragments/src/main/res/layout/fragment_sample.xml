@@ -12,7 +12,7 @@
         android:text="I am the SampleSegment"
         />
     <EditText
-        android:id="@+id/required_to_retain_state"
+        android:id="@+id/id_needed_to_retain_state"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter some text here"

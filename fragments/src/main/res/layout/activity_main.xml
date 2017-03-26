@@ -6,15 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="org.ridcully.mondriansamples.MainActivity">
+    >
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Activity" />
 
-    <org.ridcully.mondrian.SegmentContainer
-        android:id="@+id/segment_container"
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -22,9 +22,9 @@
             android:id="@+id/bt_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tap to replace with segment"
+            android:text="Tap to replace with fragment"
             />
 
-    </org.ridcully.mondrian.SegmentContainer>
+    </FrameLayout>
 
 </LinearLayout>
