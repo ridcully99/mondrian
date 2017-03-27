@@ -26,21 +26,27 @@ public class MainActivity extends SegmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        if (savedInstanceState != null) {
-            mSegmentContainer.rebuildFromBundle(savedInstanceState, "foo");
-        }
+
+//        if (savedInstanceState != null) {
+//            mSegmentContainer.rebuildFromBundle(savedInstanceState, "foo");
+//        }
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mSegmentContainer.saveToBundle(outState, "foo");
-    }
+//    @Override
+//    protected void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        mSegmentContainer.saveToBundle(outState, "foo");
+//    }
 
     @OnClick(R.id.bt_add)
     public void addSegment() {
-        mSegmentContainer.removeAllViews();
-        mSegmentContainer.addView(new SampleSegment(this));
+        getSegmentManager()
+                .newState()
+                    .withTag("foo")
+                    .putSegment(R.id.segment_container, new SampleSegment(this))
+                .push();
+//        mSegmentContainer.removeAllViews();
+//        mSegmentContainer.addView(new SampleSegment(this));
     }
 
     @Override

@@ -1,6 +1,9 @@
 package org.ridcully.mondrian;
 
+import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +21,19 @@ public class SegmentActivity extends AppCompatActivity {
 
     private boolean mIsStarted;
     private boolean mIsResumed;
+    private SegmentManager mSegmentManager;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mSegmentManager = new SegmentManager(this);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        mSegmentManager.onRestoreInstanceState(savedInstanceState);
+        super.onRestoreInstanceState(savedInstanceState);
+    }
 
     @Override
     protected void onStart() {
@@ -47,6 +63,12 @@ public class SegmentActivity extends AppCompatActivity {
         for (Segment s : getSegments(true)) s.onStop();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mSegmentManager.onSaveInstanceState(outState);
+    }
+
     /**
      * This method is final. Override {@link #handleBackPressed()} instead.
      */
@@ -55,6 +77,10 @@ public class SegmentActivity extends AppCompatActivity {
         if (!handleBackPressed()) {
             super.onBackPressed();
         }
+    }
+
+    public SegmentManager getSegmentManager() {
+        return mSegmentManager;
     }
 
     /**

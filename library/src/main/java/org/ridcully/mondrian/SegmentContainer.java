@@ -33,6 +33,11 @@ public class SegmentContainer extends FrameLayout {
         super(context, attrs, defStyleAttr);
     }
 
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        return super.onSaveInstanceState();
+    }
+
     public void saveToBundle(Bundle bundle, String tag) {
         ArrayList<String> classNames = new ArrayList<>(getChildCount());
         for (int i = 0; i < getChildCount(); i++) {
