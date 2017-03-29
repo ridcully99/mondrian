@@ -17,53 +17,28 @@ import butterknife.OnClick;
 
 public class MainActivity extends SegmentActivity {
 
-    @BindView(R.id.segment_container) SegmentContainer mSegmentContainer;
-
-    private List<Parcelable> mSegmentTransactions;
+    @BindView(R.id.segment_container) FrameLayout mSegmentContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
-//        if (savedInstanceState != null) {
-//            mSegmentContainer.rebuildFromBundle(savedInstanceState, "foo");
-//        }
     }
-
-//    @Override
-//    protected void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        mSegmentContainer.saveToBundle(outState, "foo");
-//    }
 
     @OnClick(R.id.bt_add)
     public void addSegment() {
-        getSegmentManager()
-                .newState()
-                    .withTag("foo")
-                    .putSegment(R.id.segment_container, new SampleSegment(this))
-                .push();
-//        mSegmentContainer.removeAllViews();
-//        mSegmentContainer.addView(new SampleSegment(this));
+        getSegmentManager().push(R.id.segment_container, new SampleSegment(this), "tag");
     }
 
     @Override
     public boolean handleBackPressed() {
         if (!super.handleBackPressed()) {
-            if (getSegment() != null) {
-                mSegmentContainer.removeAllViews();
+            if (getSegmentManager().peek(R.id.segment_container) != null) {
+                getSegmentManager().popAll(R.id.segment_container);
                 return true;
             }
         }
         return false;
-    }
-
-    private Segment getSegment() {
-        if (mSegmentContainer.getChildCount() == 0) return null;
-        View v = mSegmentContainer.getChildAt(0);
-        if (v instanceof Segment) return (Segment)v;
-        return null;
     }
 }
