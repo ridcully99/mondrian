@@ -1,15 +1,8 @@
 package org.ridcully.mondrian;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.view.ViewGroup;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Activity that should be used for holding Segments to correctly manage Segment's lifecycle callbacks.
@@ -39,28 +32,28 @@ public class SegmentActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         mIsStarted = true;
-        for (Segment s : getSegments(true)) s.onStart();
+        for (Segment s : mSegmentManager.getAttachedSegments(true)) s.onStart();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mIsResumed = true;
-        for (Segment s : getSegments(true)) s.onResume();
+        for (Segment s : mSegmentManager.getAttachedSegments(true)) s.onResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         mIsResumed = false;
-        for (Segment s : getSegments(true)) s.onPause();
+        for (Segment s : mSegmentManager.getAttachedSegments(true)) s.onPause();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         mIsStarted = false;
-        for (Segment s : getSegments(true)) s.onStop();
+        for (Segment s : mSegmentManager.getAttachedSegments(true)) s.onStop();
     }
 
     @Override
@@ -69,30 +62,8 @@ public class SegmentActivity extends AppCompatActivity {
         mSegmentManager.onSaveInstanceState(outState);
     }
 
-    /**
-     * This method is final. Override {@link #handleBackPressed()} instead.
-     */
-    @Override
-    final public void onBackPressed() {
-        if (!handleBackPressed()) {
-            super.onBackPressed();
-        }
-    }
-
     public SegmentManager getSegmentManager() {
         return mSegmentManager;
-    }
-
-    /**
-     * Called upon backPressed event, this method invokes handleBackPressed()
-     * on attached Segments (also Segments attached to Segments etc.), until as a segment
-     * consumes the event. If the event is not consumed by any event, the default implementation
-     * (super.onBackPressed() is called.
-     *
-     * @return true if backPressed event was consumed by any Segment, false if not.
-     */
-    public boolean handleBackPressed() {
-        return performSegmentsHandleBackPressed();
     }
 
     /**
@@ -139,49 +110,4 @@ public class SegmentActivity extends AppCompatActivity {
     // ---------------------------------------------------------------------------------------------
 
 
-    /**
-     * TODO Segmente anders durchgehen/aufrufen -- immer ganz ans Segment-Tree Ende gehen und dort anfangen.
-     * TODO Und während dem Durchgehen handleBackPressed() aufrufen
-     *
-     *
-     *
-     * @return
-     */
-    private boolean performSegmentsHandleBackPressed() {
-        for (Segment segment : getSegments(true)) {
-            boolean handled = segment.handleBackPressed();
-            if (handled) return true;
-        }
-        return false;
-    }
-
-    private List<Segment> getSegments(boolean collectSubSegments) {
-        List<Segment> result = new ArrayList<>();
-        View root = getWindow().getDecorView().getRootView();
-        if (root != null && root instanceof ViewGroup) {
-            if (root instanceof Segment && ((Segment)root).isAttachedToWindow()) {
-                result.add((Segment) root);
-            }
-            if (collectSubSegments || !(root instanceof Segment)) {
-                collectSegments((ViewGroup)root, collectSubSegments, result);
-            }
-        }
-        return result;
-    }
-
-    static void collectSegments(@NonNull ViewGroup parent,
-                                boolean collectSubSegments,
-                                @NonNull List<Segment> result) {
-        for (int i = 0; i < parent.getChildCount(); i++) {
-            View child = parent.getChildAt(i);
-            if (child instanceof ViewGroup) {
-                if (child instanceof Segment && ((Segment) child).isAttachedToWindow()) {
-                    result.add((Segment) child);
-                }
-                if (collectSubSegments || !(child instanceof Segment)) {
-                    collectSegments((ViewGroup) child, collectSubSegments, result);
-                }
-            }
-        }
-    }
 }

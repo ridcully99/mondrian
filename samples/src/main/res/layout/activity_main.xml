@@ -18,12 +18,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/bt_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tap to replace with segment"
-            />
+        <org.ridcully.mondrian.Segment
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/bt_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tap to replace with segment"
+                />
+
+        </org.ridcully.mondrian.Segment>
 
     </FrameLayout>
 

@@ -1,19 +1,15 @@
 package org.ridcully.mondriansamples;
 
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.view.View;
 import android.widget.FrameLayout;
 
-import org.ridcully.mondrian.Segment;
 import org.ridcully.mondrian.SegmentActivity;
-import org.ridcully.mondrian.SegmentContainer;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static org.ridcully.mondrian.SegmentManager.argumentBundle;
 
 public class MainActivity extends SegmentActivity {
 
@@ -28,17 +24,13 @@ public class MainActivity extends SegmentActivity {
 
     @OnClick(R.id.bt_add)
     public void addSegment() {
-        getSegmentManager().push(R.id.segment_container, new SampleSegment(this), "tag");
+        getSegmentManager().push(R.id.segment_container, new SampleSegment(this, argumentBundle("name", "Robert")), "marker");
     }
 
     @Override
-    public boolean handleBackPressed() {
-        if (!super.handleBackPressed()) {
-            if (getSegmentManager().peek(R.id.segment_container) != null) {
-                getSegmentManager().popAll(R.id.segment_container);
-                return true;
-            }
+    public void onBackPressed() {
+        if (!getSegmentManager().onBackPressed(R.id.segment_container)) {
+            super.onBackPressed();
         }
-        return false;
     }
 }
