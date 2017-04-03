@@ -1,13 +1,18 @@
 package org.ridcully.mondrian;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.AttrRes;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.FrameLayout;
@@ -71,50 +76,68 @@ public class Segment extends FrameLayout {
     }
 
     /**
-     * Invoked when component is created.
+     * Invoked by constructor, when segment is created.
      * <p>
-     * This method should inflate the layout of the component, apply Butterknife#bind, and do all
-     * the other setup usually done in Activity#onCreate().
+     * This method should use setContentView() to set the layout of the segment, and do all the
+     * other setup usually done in Activity#onCreate().
      * <p>
-     * Example<br/>
-     * <code>
-     * inflate(getContext(), R.layout.component_layout, this);
-     * ButterKnife.bind(this);
-     * </code>
      */
     protected void onCreate() {
         Log.d(TAG, "create");
     }
 
+    /**
+     * Invoked when segment is attached to window.
+     */
     public void onAttach() {
         Log.d(TAG, "attach");
     }
 
+    /**
+     * Invoked when host activity gets started,
+     * or when added programmatically and host activity is already started.
+     */
     public void onStart() {
         Log.d(TAG, "start");
     }
 
+    /**
+     * Invoked when host activity gets resumed,
+     * or when added programmatically and host activity is already resumed.
+     */
     public void onResume() {
         Log.d(TAG, "resume");
     }
 
+    /**
+     * Invoked when host activity gets paused.
+     */
     public void onPause() {
         Log.d(TAG, "pause");
     }
 
+    /**
+     * Invoked when host acitivty gets stopped.
+     */
     public void onStop() {
         Log.d(TAG, "stop");
     }
 
+    /**
+     * Invoked when segment is detached from window.
+     */
     public void onDetach() {
         Log.d(TAG, "detach");
     }
 
     /**
-     * Implement this and call from parent view (activity/component) if segment wants to
-     * handle back-presses specifically.
+     * Invoked by SegmentManager, when back button is pressed and this segment is the top-most
+     * in a container and no other segment claimed the event yet.
      *
-     * @return true if back-pressed was handled here, false if you want parent to handle it
+     * @see SegmentManager#onBackPressed(int...)
+     *
+     * @return  true if back-pressed was consumed here,
+     *          false if you want SegmentManager to pop this segment from the container
      */
     public boolean onBackPressed() {
         return false;
@@ -123,6 +146,32 @@ public class Segment extends FrameLayout {
 
     public void setContentView(@LayoutRes int layoutResId) {
         inflate(getContext(), layoutResId, this);
+    }
+
+
+    // -------------------------------------------------------------------- Some convenience methods
+
+
+    public CharSequence getText(int resId) {
+        return getContext().getText(resId);
+    }
+
+    public String getString(int resId) {
+        return getContext().getString(resId);
+    }
+
+    public String getString(int resId, Object... formatArgs) {
+        return getContext().getString(resId, formatArgs);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public Drawable getDrawable(@DrawableRes int resId) {
+        return getContext().getDrawable(resId);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public int getColor(@ColorRes int resId) {
+        return getContext().getColor(resId);
     }
 
 
