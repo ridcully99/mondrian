@@ -12,9 +12,24 @@ import android.support.v7.app.AppCompatActivity;
 
 public class SegmentActivity extends AppCompatActivity {
 
+
+    // ------------------------------------------------------------------------------- Member fields
+
+
+    /**
+     * Keep track of current state of activity, so we can invoke necessary callbacks on Segments
+     * regardless on how or when they are added.
+     */
     private boolean mIsStarted;
     private boolean mIsResumed;
+    /**
+     * The segment manager; should be used add or remove segments-
+     */
     private SegmentManager mSegmentManager;
+
+
+    // -------------------------------------------------------------------------- Activity lifecycle
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,6 +77,16 @@ public class SegmentActivity extends AppCompatActivity {
         mSegmentManager.onSaveInstanceState(outState);
     }
 
+
+    // --------------------------------------------------------------------------------- Own methods
+
+
+    /**
+     * Returns the segment manager of this activity. Use the segment manager to programmatically
+     * add and remove segments to the activity.
+     *
+     * @return the segment manager
+     */
     public SegmentManager getSegmentManager() {
         return mSegmentManager;
     }
@@ -108,6 +133,4 @@ public class SegmentActivity extends AppCompatActivity {
 
 
     // ---------------------------------------------------------------------------------------------
-
-
 }
