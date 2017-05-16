@@ -1,7 +1,6 @@
 package org.ridcully.mondrian;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,8 +15,6 @@ import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.FrameLayout;
-
-import java.io.Serializable;
 
 /**
  * Base Segment. Extend and use with some SegmentActivity to participate in Activity's lifecycle.
@@ -38,13 +35,6 @@ public class Segment extends FrameLayout {
         this(context, null, 0, null);
     }
 
-    /**
-     * Required constructor.
-     * Required by SegmentManager to rebuild segments in restoreInstanceState()
-     *
-     * @param context
-     * @param attrs
-     */
     public Segment(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0, null);
     }
@@ -64,7 +54,6 @@ public class Segment extends FrameLayout {
     public Segment(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr, Bundle args) {
         super(context, attrs, defStyleAttr);
         mArguments = args;
-        onCreate();
     }
 
     /**
@@ -73,17 +62,6 @@ public class Segment extends FrameLayout {
      */
     public Bundle getArguments() {
         return mArguments;
-    }
-
-    /**
-     * Invoked by constructor, when segment is created.
-     * <p>
-     * This method should use setContentView() to set the layout of the segment, and do all the
-     * other setup usually done in Activity#onCreate().
-     * <p>
-     */
-    protected void onCreate() {
-        Log.d(TAG, "create");
     }
 
     /**
@@ -141,11 +119,6 @@ public class Segment extends FrameLayout {
      */
     public boolean onBackPressed() {
         return false;
-    }
-
-
-    public void setContentView(@LayoutRes int layoutResId) {
-        inflate(getContext(), layoutResId, this);
     }
 
 

@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -50,6 +49,15 @@ public class SegmentManager {
         mManagedContainerIds.clear();
         ArrayList<Bundle> segmentInfos = savedInstanceState.getParcelableArrayList(SEGMENTS_KEY);
         if (segmentInfos == null) return;
+        // clear all containers in savedInstanceState first, to avoid duplication of segments
+        for (Bundle segmentInfo : segmentInfos) {
+            int containerId = segmentInfo.getInt("containerId");
+            // clear() adds container to managed containers, so we can check if containerId
+            // is already managed to avoid calling clear multiple times for same container.
+            if (!mManagedContainerIds.contains(containerId)) {
+                clear(containerId);
+            }
+        }
         for (Bundle segmentInfo : segmentInfos) {
             rebuildSegment(segmentInfo.getInt("containerId"),
                     segmentInfo.getString("className"),
@@ -64,14 +72,26 @@ public class SegmentManager {
      * @param nameValuePairs
      * @return Bundle that can be passed to constructors
      */
-    public static Bundle argumentBundle(Serializable... nameValuePairs) {
-        Bundle bundle = new Bundle();
+    public static Bundle bundle(Object... nameValuePairs) {
+        BundleBuilder builder = BundleBuilder.instance();
         for (int i = 0; i < nameValuePairs.length - 1; i += 2) {
-            String name = (String)nameValuePairs[i];
-            Serializable value = nameValuePairs[i+1];
-            bundle.putSerializable(name, value);
+            String key = (String)nameValuePairs[i];
+            Object value = nameValuePairs[i+1];
+            builder.setArg(key, value);
         }
-        return bundle;
+        return builder.build();
+    }
+
+    /**
+     * Adds given segment to the ViewGroup identified by containerId.
+     *
+     * @param containerId
+     * @param segment
+     * @return SegmentManager for concatenating further operations
+     */
+    public SegmentManager push(@IdRes int containerId, Segment segment) {
+        push(containerId, segment, null);
+        return this;
     }
 
     /**
@@ -80,28 +100,28 @@ public class SegmentManager {
      * @param containerId
      * @param segment
      * @param marker An optional marker that can be used to identify the segment for further usage.
-     *            For example it can be used to ccordinate state of different containers, etc.
+     *            For example it can be used to coordinate state of different containers, etc.
+     * @return SegmentManager for concatenating further operations
      */
-    public void push(@IdRes int containerId, Segment segment, String marker) {
+    public SegmentManager push(@IdRes int containerId, Segment segment, String marker) {
         ViewGroup container = findContainer(containerId);
         segment.setMarker(marker);
         container.addView(segment);
+        return this;
     }
 
     /**
      * Removes top-most Segment from the ViewGroup identified by containerId.
      *
      * @param containerId
-     * @return true if a segment was removed, false if not
+     * @return SegmentManager for concatinating further operations
      */
-    public boolean pop(@IdRes int containerId) {
-        boolean popped = false;
+    public SegmentManager pop(@IdRes int containerId) {
         ViewGroup container = findContainer(containerId);
         if (container.getChildCount() > 0) {
             container.removeViewAt(container.getChildCount() - 1);
-            popped = true;
         }
-        return popped;
+        return this;
     }
 
     /**
@@ -110,10 +130,9 @@ public class SegmentManager {
      *
      * @param containerId
      * @param marker
-     * @return true if any segments where popped, false if not
+     * @return SegmentManager for concatenating further operations
      */
-    public boolean popToMarker(@IdRes int containerId, String marker) {
-        boolean popped = false;
+    public SegmentManager popToMarker(@IdRes int containerId, String marker) {
         ViewGroup container = findContainer(containerId);
         for (int pos = container.getChildCount() - 1; pos >= 0; pos--) {
             View view = container.getChildAt(pos);
@@ -121,28 +140,60 @@ public class SegmentManager {
                 break;
             }
             container.removeViewAt(pos);
-            popped = true;
         }
-        return popped;
+        return this;
     }
 
     /**
-     * Pops all Segments from ViewGroup identified by containerId
+     * Pops all Segments from ViewGroup identified by containerId.
+     *
      * @param containerId
-     * @return true if any segments where popped, false if not
+     * @return SegmentManager for concatinating further operations
      */
-    public boolean popAll(@IdRes int containerId) {
-        boolean popped = false;
+    public SegmentManager popAll(@IdRes int containerId) {
         ViewGroup container = findContainer(containerId);
         for (int pos = container.getChildCount() - 1; pos >= 0; pos--) {
             container.removeViewAt(pos);
-            popped = true;
         }
-        return popped;
+        return this;
     }
 
-    public boolean clear(@IdRes int containerId) {
+    /**
+     * Removes all segments from ViewGroup identified by containerId.
+     * This is a synonym for {@link #popAll(int)}.
+     *
+     * @param containerId
+     * @return SegmentManager for concatenating further operations
+     */
+    public SegmentManager clear(@IdRes int containerId) {
         return popAll(containerId);
+    }
+
+    /**
+     * Sets given segment in ViewGroup identified by given containerId, removing all other segments
+     * before. This is the same as concatinating clear(containerId) and push(containerId, segment).
+     *
+     * @param containerId
+     * @param segment
+     * @return SegmentManager for concatinating further operations
+     */
+    public SegmentManager set(@IdRes int containerId, Segment segment) {
+        return set(containerId, segment, null);
+    }
+
+    /**
+     * Sets given segment in ViewGroup identified by given containerId, removing all other segments
+     * before. This is the same as concatinating clear(containerId) and push(containerId, segment).
+     *
+     * @param containerId
+     * @param segment
+     * @param marker
+     * @return SegmentManager for concatenating further operations
+     */
+    public SegmentManager set(@IdRes int containerId, Segment segment, String marker) {
+        clear(containerId);
+        push(containerId, segment, marker);
+        return this;
     }
 
     /**
@@ -216,8 +267,8 @@ public class SegmentManager {
      * @param result
      */
     private void collectAttachedSegments(@NonNull ViewGroup parent,
-                                boolean collectSubSegments,
-                                @NonNull List<Segment> result) {
+                                         boolean collectSubSegments,
+                                         @NonNull List<Segment> result) {
         for (int i = 0; i < parent.getChildCount(); i++) {
             View child = parent.getChildAt(i);
             if (child instanceof ViewGroup) {
@@ -256,9 +307,15 @@ public class SegmentManager {
     private void rebuildSegment(int containerId, String className, Bundle arguments) {
         ViewGroup container = findContainer(containerId);
         try {
+            View childView;
             Class<?> clazz = getClass().getClassLoader().loadClass(className);
-            Constructor constructor = clazz.getConstructor(Context.class, Bundle.class);
-            View childView = (View) constructor.newInstance(mSegmentActivity, arguments);
+            try {
+                Constructor constructor = clazz.getConstructor(Context.class, Bundle.class);
+                childView = (View) constructor.newInstance(mSegmentActivity, arguments);
+            } catch (Exception e) {
+                Constructor constructor = clazz.getConstructor(Context.class);
+                childView = (View) constructor.newInstance(mSegmentActivity);
+            }
             container.addView(childView);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
@@ -290,4 +347,5 @@ public class SegmentManager {
     private boolean stringsEqual(String a, String b) {
         return a == null ? b == null : a.equals(b);
     }
+
 }
