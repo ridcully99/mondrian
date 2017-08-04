@@ -9,7 +9,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static org.ridcully.mondrian.SegmentManager.argumentBundle;
+import static org.ridcully.mondrian.SegmentManager.bundle;
 
 public class MainActivity extends SegmentActivity {
 
@@ -24,7 +24,7 @@ public class MainActivity extends SegmentActivity {
 
     @OnClick(R.id.bt_add)
     public void addSegment() {
-        getSegmentManager().push(R.id.segment_container, new SampleSegment(this, argumentBundle("name", "Robert")), "marker");
+        getSegmentManager().push(R.id.segment_container, new GreenSegment(this, bundle("name", "Robert")), "marker");
     }
 
     @Override
