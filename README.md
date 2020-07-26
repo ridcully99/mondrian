@@ -1,2 +1,1 @@
-# mondrian
-A simple replacement for Android Fragments
+# Vragments is Views instead of Fragments
