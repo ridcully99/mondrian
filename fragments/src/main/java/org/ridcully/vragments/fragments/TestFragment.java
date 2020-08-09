@@ -1,6 +1,5 @@
-package org.ridcully.mondrian.fragments;
+package org.ridcully.vragments.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;

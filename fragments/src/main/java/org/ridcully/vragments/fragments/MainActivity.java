@@ -1,4 +1,4 @@
-package org.ridcully.mondrian.fragments;
+package org.ridcully.vragments.fragments;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

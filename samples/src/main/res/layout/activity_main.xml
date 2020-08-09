@@ -20,7 +20,7 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <org.ridcully.mondrian.Segment
+        <org.ridcully.vragments.Vragment
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#ffffff99"
@@ -40,7 +40,7 @@
                 android:text="Tap to replace with green segment"
                 />
 
-        </org.ridcully.mondrian.Segment>
+        </org.ridcully.vragments.Vragment>
 
     </FrameLayout>
 

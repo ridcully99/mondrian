@@ -1,4 +1,4 @@
-package org.ridcully.mondrian.fragments;
+package org.ridcully.vragments.fragments;
 
 import org.junit.Test;
 

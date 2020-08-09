@@ -3,15 +3,15 @@ package org.ridcully.mondriansamples;
 import android.os.Bundle;
 import android.widget.FrameLayout;
 
-import org.ridcully.mondrian.SegmentActivity;
+import org.ridcully.vragments.VragmentActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static org.ridcully.mondrian.SegmentManager.bundle;
+import static org.ridcully.vragments.VragmentManager.bundle;
 
-public class MainActivity extends SegmentActivity {
+public class MainActivity extends VragmentActivity {
 
     @BindView(R.id.segment_container) FrameLayout mSegmentContainer;
 
@@ -24,7 +24,7 @@ public class MainActivity extends SegmentActivity {
 
     @OnClick(R.id.bt_add)
     public void addSegment() {
-        getSegmentManager().push(R.id.segment_container, new GreenSegment(this, bundle("name", "Robert")), "marker");
+        getSegmentManager().push(R.id.segment_container, new GreenVragment(this, bundle("name", "Robert")), "marker");
     }
 
     @Override

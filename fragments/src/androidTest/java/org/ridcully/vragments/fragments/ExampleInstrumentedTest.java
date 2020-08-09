@@ -1,4 +1,4 @@
-package org.ridcully.mondrian.fragments;
+package org.ridcully.vragments.fragments;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("org.ridcully.mondrian.fragments", appContext.getPackageName());
+        assertEquals("org.ridcully.vragments.fragments", appContext.getPackageName());
     }
 }

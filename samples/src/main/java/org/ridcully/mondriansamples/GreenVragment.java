@@ -5,7 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import org.ridcully.mondrian.Segment;
+import org.ridcully.vragments.Vragment;
 
 import butterknife.ButterKnife;
 
@@ -14,10 +14,10 @@ import butterknife.ButterKnife;
  */
 
 @SuppressLint("ViewConstructor")
-class GreenSegment extends Segment {
+class GreenVragment extends Vragment {
 
     /** Required */
-    public GreenSegment(Context context, Bundle args) {
+    public GreenVragment(Context context, Bundle args) {
         super(context, args);
         inflate(getContext(), R.layout.segment_green, this);
         ButterKnife.bind(this);

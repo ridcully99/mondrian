@@ -1,4 +1,4 @@
-package org.ridcully.mondrian;
+package org.ridcully.vragments;
 
 import android.os.Bundle;
 import android.os.Parcelable;
